@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DineFlow — Admin Login</title>
+    <title>DineFlow — Admin Signup</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
@@ -38,7 +38,7 @@
         }
         .login-box p {
             color: var(--d-text-secondary);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             font-size: 15px;
         }
         .form-group-login {
@@ -80,20 +80,43 @@
             cursor: pointer;
             transition: all 0.3s var(--ease);
             box-shadow: 0 4px 14px var(--c-primary-glow);
+            margin-bottom: 16px;
         }
         .btn-login:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 20px var(--c-primary-glow);
         }
-        .error-msg {
-            color: var(--status-cancelled);
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .error-msg, .success-msg {
             font-size: 14px;
             margin-top: 16px;
             padding: 10px;
-            background: rgba(239, 68, 68, 0.1);
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(239, 68, 68, 0.2);
             display: none;
+        }
+        .error-msg {
+            color: var(--a-danger);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .success-msg {
+            color: var(--status-ready);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .link-text {
+            color: var(--c-primary);
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .link-text:hover {
+            color: white;
         }
         
         @keyframes slideUp {
@@ -104,58 +127,57 @@
 </head>
 <body>
     <div class="login-box">
-        <h1>⚙️ DineFlow Admin</h1>
-        <p>Sign in to manage your restaurant</p>
+        <h1>⚙️ DineFlow Auth</h1>
+        <p>Create a new administrator account</p>
         
-        <form id="loginForm">
+        <form id="signupForm">
             <div class="form-group-login">
                 <label>Email Address</label>
                 <input type="email" id="email" placeholder="admin@restaurant.com" required>
             </div>
             <div class="form-group-login">
                 <label>Password</label>
-                <input type="password" id="password" placeholder="Enter admin password" required>
+                <input type="password" id="password" placeholder="Create a strong password" required minlength="6">
             </div>
-            <button type="submit" class="btn-login" id="submitBtn">Login to Dashboard</button>
-            <a href="/admin-signup" class="link-text" style="display:block; margin-top:8px; color:var(--c-primary); text-decoration:none; font-size:14px; font-weight:500;">Need an account? Create one</a>
-            <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
+            <button type="submit" class="btn-login" id="submitBtn">Create Account</button>
+            
+            <a href="/admin-login" class="link-text">Already have an account? Log in</a>
+            
+            <div class="error-msg" id="errorMsg"></div>
+            <div class="success-msg" id="successMsg">Account created! Redirecting...</div>
         </form>
     </div>
 
     <!-- Firebase Integration -->
     <script type="module">
-        import { auth, signInWithEmailAndPassword, onAuthStateChanged } from '/js/firebase-init.js';
+        import { auth, createUserWithEmailAndPassword } from '/js/firebase-init.js';
 
-        // Redirect if already logged in
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.location.href = '/admin';
-            }
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const btn = document.getElementById('submitBtn');
             const errorMsg = document.getElementById('errorMsg');
-            
+            const successMsg = document.getElementById('successMsg');
+
             btn.disabled = true;
-            btn.textContent = 'Logging in...';
+            btn.textContent = 'Creating...';
             errorMsg.style.display = 'none';
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // Redirect will happen automatically via onAuthStateChanged
+                // Firebase creates the user and signs them in automatically
+                await createUserWithEmailAndPassword(auth, email, password);
+                
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/admin';
+                }, 1000);
             } catch (error) {
+                // Handle Errors here
                 errorMsg.textContent = error.message;
                 errorMsg.style.display = 'block';
-                errorMsg.style.animation = 'none';
-                errorMsg.offsetHeight; // trigger reflow
-                errorMsg.style.animation = 'slideUp 0.3s ease';
-                
                 btn.disabled = false;
-                btn.textContent = 'Login to Dashboard';
+                btn.textContent = 'Create Account';
             }
         });
     </script>

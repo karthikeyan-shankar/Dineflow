@@ -3,12 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <script>
-        // Check auth before anything else
-        if (localStorage.getItem('dineflowAdminAuth') !== 'true') {
-            window.location.href = '/admin-login';
-        }
-    </script>
+    <style>
+        /* Hide body until Firebase auth verifies the user */
+        body { display: none; }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DineFlow — Admin Dashboard</title>
     <meta name="description" content="Restaurant management dashboard">
@@ -223,7 +221,7 @@
     <!-- Toast -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script type="module" src="/js/auth-guard.js"></script>
     <script src="/js/admin.js"></script>
 </body>
-
 </html>
