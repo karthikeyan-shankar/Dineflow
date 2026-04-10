@@ -337,6 +337,10 @@ app.get('/manage', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'manage.html'));
 });
 
+app.get('/admin-login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin-login.html'));
+});
+
 // ─── Start Server ─────────────────────────────────────────────────
 async function start() {
   // Try connecting to MongoDB

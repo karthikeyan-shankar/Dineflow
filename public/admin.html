@@ -3,6 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>
+        // Check auth before anything else
+        if (localStorage.getItem('dineflowAdminAuth') !== 'true') {
+            window.location.href = '/admin-login';
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DineFlow — Admin Dashboard</title>
     <meta name="description" content="Restaurant management dashboard">
@@ -24,6 +30,7 @@
         <div class="admin-links">
             <a href="/" class="admin-link">📱 Menu</a>
             <a href="/kitchen" class="admin-link">👨‍🍳 Kitchen</a>
+            <button class="admin-link" onclick="logoutAdmin()" style="background:transparent; border:none; padding: 6px 14px;">🚪 Logout</button>
         </div>
     </header>
 

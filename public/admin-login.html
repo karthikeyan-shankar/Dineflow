@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DineFlow — Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+    <style>
+        body {
+            background: var(--d-bg);
+            color: var(--d-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .login-box {
+            background: var(--d-surface);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--c-shadow-lg);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--d-border);
+            text-align: center;
+            animation: slideUp 0.4s var(--ease);
+        }
+        .login-box h1 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 8px;
+            color: white;
+            font-size: 28px;
+        }
+        .login-box p {
+            color: var(--d-text-secondary);
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+        .form-group-login {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group-login label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--d-text-secondary);
+            font-weight: 500;
+        }
+        .form-group-login input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--d-border);
+            background: var(--d-surface-2);
+            color: var(--d-text);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            transition: all 0.3s var(--ease);
+            box-sizing: border-box;
+        }
+        .form-group-login input:focus {
+            border-color: var(--c-primary);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--c-primary-glow);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dark));
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            box-shadow: 0 4px 14px var(--c-primary-glow);
+        }
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--c-primary-glow);
+        }
+        .error-msg {
+            color: var(--status-cancelled);
+            font-size: 14px;
+            margin-top: 16px;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            display: none;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>⚙️ DineFlow Admin</h1>
+        <p>Sign in to manage your restaurant</p>
+        
+        <form id="loginForm">
+            <div class="form-group-login">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter admin password (admin123)" required>
+            </div>
+            <button type="submit" class="btn-login">Login to Dashboard</button>
+            <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
+        </form>
+    </div>
+
+    <script>
+        // Redirect if already logged in
+        if (localStorage.getItem('dineflowAdminAuth') === 'true') {
+            window.location.href = '/admin';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            
+            // Simple password check (can be replaced with backend auth later)
+            if (password === 'admin123' || password === 'admin') {
+                localStorage.setItem('dineflowAdminAuth', 'true');
+                window.location.href = '/admin';
+            } else {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.style.display = 'block';
+                // Reset animation
+                errorMsg.style.animation = 'none';
+                errorMsg.offsetHeight; // trigger reflow
+                errorMsg.style.animation = 'slideUp 0.3s ease';
+            }
+        });
+    </script>
+</body>
+</html>

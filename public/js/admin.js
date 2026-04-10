@@ -375,3 +375,9 @@ function showToast(message, type = 'info') {
         if (toast.parentNode) toast.remove();
     }, 3000);
 }
+
+// ─── Authentication ──────────────────────────────────────────────────
+function logoutAdmin() {
+    localStorage.removeItem('dineflowAdminAuth');
+    window.location.href = '/admin-login';
+}
